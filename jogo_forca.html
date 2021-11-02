@@ -365,10 +365,10 @@
   <script>
 
     // randol color
-    function getRandomColor() {
+    const getRandomColor = () => {
       let letters = '0123456789ABCDEF';
       let color = '#';
-      for (var i = 0; i < 6; i++) {
+      for (let i = 0; i < 6; i++) {
         color += letters[Math.floor(Math.random() * 16)];
       }
       return color;
@@ -390,7 +390,7 @@
       newDiv.style.height = '40px';
       newDiv.style.display = 'flex';
       newDiv.style.justifyContent = 'center';
-      newDiv.style.cursor = 'pointer'; 
+      newDiv.style.cursor = 'pointer';
       newDiv.style.alignItems = 'center';
 
       // animation
@@ -399,14 +399,15 @@
 				from { transform: rotateZ(0deg);   }\
 				to   { transform: rotateZ(360deg); }\
 			}'
-		 );
+      );
       newDiv.style.animation = 'anim 2s linear forwards';
 
       // pega a letra através do click
-      newDiv.onclick = () => { 
-        alert(letra); 
+      newDiv.onclick = () => {
+        alert(letra);
         document.getElementById('letra').value = letra;
-        document.getElementById('resposta').value += letra;}
+        document.getElementById('resposta').value += letra;
+      }
 
       tecladoVirtual.appendChild(newDiv);
       return newDiv;
