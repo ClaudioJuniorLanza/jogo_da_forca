@@ -1,0 +1,102 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  font-family: monospace;
+  font-weight: bold;
+}
+
+.fadein {
+  margin-top: 30px; 
+  animation-name: fadein;
+  animation-duration: 2s;
+}
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+#header{
+  padding: 30px; 
+  display: flex; 
+  align-items: center;
+  justify-content: center; 
+}
+
+#header > h1{
+  font-weight: bold; 
+  font-size: 32px; 
+  margin-right: 40px;
+}
+
+#jogoContainer{
+  box-shadow: 4px 4px 4px 4px rgb(109, 107, 107, 0.2); 
+  padding: 40px; 
+  margin-right: 30px;
+  display: flex; 
+  flex-direction: column; 
+  min-width: 800px; 
+  height: 700px;
+  display: flex; 
+  justify-content: space-evenly;
+  align-items: center;
+}
+#divLetras{
+  padding: 30px;
+  background-image: url('./dica.png');
+  background-size: 100px;
+  color: white;
+  background-color: rgb(29, 29, 29);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 700px; 
+}
+
+#divLetras > div{
+  height: 200px; 
+  display: flex;
+  flex-direction: column; 
+  justify-content: space-between;
+}
+
+.desenho{
+  min-height:100%;
+  display: flex; 
+  justify-content: center; 
+  align-items: center;
+}
+
+button {
+  width: 150px;
+  height: 40px;
+  color: black;
+  font-weight: bold;
+  background-color: transparent;
+  border-radius: 10px !important;
+}
+button:hover{
+  background-color: black;
+  color: white;
+}
+
+#inputContainer{
+  display: flex;
+  justify-content: space-between;
+  width: 400px;
+}
+
+#imgForca{
+  height: 400px;
+  width: 400px;
+  margin-bottom: 0px;
+}
+
+
+
