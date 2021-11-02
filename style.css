@@ -9,7 +9,6 @@
 }
 
 .fadein {
-  margin-top: 30px; 
   animation-name: fadein;
   animation-duration: 2s;
 }
@@ -23,7 +22,8 @@
 }
 
 #header{
-  padding: 30px; 
+  padding-top: 20px;
+  margin-bottom: 10px;; 
   display: flex; 
   align-items: center;
   justify-content: center; 
@@ -42,7 +42,7 @@
   display: flex; 
   flex-direction: column; 
   min-width: 800px; 
-  height: 700px;
+  height: 650px;
   display: flex; 
   justify-content: space-evenly;
   align-items: center;
@@ -56,7 +56,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 700px; 
+  height: 650px; 
 }
 
 #divLetras > div{
@@ -95,7 +95,7 @@ button:hover{
 #imgForca{
   height: 400px;
   width: 400px;
-  margin-bottom: 0px;
+  margin-bottom: 80px;
 }
 
 
