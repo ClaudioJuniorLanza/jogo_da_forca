@@ -64,6 +64,8 @@
         <div id='tecladoVirtual'
           style="display: flex; flex-wrap: wrap; width: 750px;margin-top: -100px; background-color: black;">
         </div>
+
+        <div id = 'reaction'></div>
       </div>
       <!-- dicas -->
       <div class="col" id="divLetras">
@@ -111,7 +113,7 @@
     class Forca {
       #palavra = '';
       #qtdLetras = 0;
-      #URL_API = "https://servicodados.ibge.gov.br/api/v1/localidades/paises"; 
+      #URL_API = "https://servicodados.ibge.gov.br/api/v1/localidades/paises";
 
       constructor(palavra = '', qtdLetras = 0) {
         this.#palavra = palavra;
@@ -133,11 +135,11 @@
       async getAPI() {
         try {
           let response = await fetch(this.#URL_API);
-          if(!response.ok){
+          if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
-          let listPalavras = await response.json();  
-          return listPalavras;        
+          let listPalavras = await response.json();
+          return listPalavras;
 
         } catch (error) {
           alert("Erro ao montar palavra da forca," + error);
@@ -153,25 +155,25 @@
       async tratativaPalavraForca(palavraRandom) {
         let str = palavraRandom.replace(/\s/g, "");
         return str.normalize("NFD").replace(/[^a-zA-Zs]/g, "");
-    }
-
-      async getPalavraForca(){
-          let palavraRamdom = '';
-          let totalPalavras = await this.getAPI();
-          let ramdom = await this.obterNumeroAleatorio(1, totalPalavras.length);
-          palavraRamdom = totalPalavras[ramdom].nome.toUpperCase();
-          forca.palavra = await this.tratativaPalavraForca(palavraRamdom);
       }
-     
+
+      async getPalavraForca() {
+        let palavraRamdom = '';
+        let totalPalavras = await this.getAPI();
+        let ramdom = await this.obterNumeroAleatorio(1, totalPalavras.length);
+        palavraRamdom = totalPalavras[ramdom].nome.toUpperCase();
+        forca.palavra = await this.tratativaPalavraForca(palavraRamdom);
+      }
+
     }
 
     class Player {
       #nome = "";
-		  #score = 0;
-		  #palavraAtual = "";
-		  #letrasDigitadas = [];
-		  #tempoCorrido = 0;
-		  constructor(nome, score = 0, palavraAtual = "", letrasDigitadas = [], tempoCorrido = 0){
+      #score = 0;
+      #palavraAtual = "";
+      #letrasDigitadas = [];
+      #tempoCorrido = 0;
+      constructor(nome, score = 0, palavraAtual = "", letrasDigitadas = [], tempoCorrido = 0) {
         this.#nome = nome;
         this.#score = score;
         this.#palavraAtual = palavraAtual;
@@ -179,31 +181,31 @@
         this.#tempoCorrido = tempoCorrido;
       }
 
-		  set nome( nome ) {
+      set nome(nome) {
         this.#nome = nome;
       }
-      get nome(){
+      get nome() {
         return this.#nome;
       }
-		  set score( score ) {
+      set score(score) {
         this.#score = score;
       }
-		  get score(){
+      get score() {
         return this.#score;
       }
-      set palavraAtual( palavra ) {
+      set palavraAtual(palavra) {
         this.#palavraAtual = palavra;
       }
       get paralavraAtual() {
         return this.#palavraAtual;
       }
-      set letrasDigitadas( letras ) {
+      set letrasDigitadas(letras) {
         this.#letrasDigitadas = letras;
       }
       get letrasDigitadas() {
         return this.#letrasDigitadas;
       }
-      set tempoCorrido( tempo ) {
+      set tempoCorrido(tempo) {
         this.#tempoCorrido = tempo;
       }
       get tempoCorrido() {
@@ -254,7 +256,7 @@
       });
     };
 
-    const resetAtributos = function () {    
+    const resetAtributos = function () {
       forca.palavra = "";
       acertosTotais = 0;
       errosTotais = 0;
@@ -279,10 +281,10 @@
       let spanLetras = document.getElementById("letras");
       spanLetras.innerHTML = formPalavra;
     };
-   
+
     function comecarJogo() {
       divForca.innerHTML = "<img id='imgForca' src='" + imagem[0] + "' width='50%' />";
-      async function start (){
+      async function start() {
         await forca.getPalavraForca();
         await exibeQtdLetras(forca.palavra);
         await exibeDivJogo();
@@ -313,12 +315,12 @@
     function resposta() {
       let respostaDiretaTratada = '';
       let respostaDireta = document.getElementById("resposta").value;
-      async function tratarPalavraDireta(){
+      async function tratarPalavraDireta() {
         respostaDiretaTratada = await forca.tratativaPalavraForca(respostaDireta);
         await verificarRespostaDireta(respostaDiretaTratada);
       }
       tratarPalavraDireta();
-      
+
     }
 
     function verificarLetra(letra) {
@@ -471,7 +473,7 @@
     [...letrasTeclado].map(letra => {
       let newDiv = document.createElement("div");
       newDiv.setAttribute('id', letra);
-      newDiv.innerText += letra;
+      newDiv.innerText = letra;
       newDiv.style.margin = '10px';
       newDiv.style.fontSize = '22px';
       newDiv.style.color = '#fff';
@@ -493,12 +495,41 @@
       newDiv.style.animation = 'anim 2s linear forwards';
 
       // pega a letra através do click
-      newDiv.onclick = () => {
-        alert(letra);
-        document.getElementById('letra').value = letra;
-        document.getElementById('resposta').value += letra;
-      }
+      newDiv.onclick = () => {     
 
+          if (isLetter(letra)) {
+          letrasInformadas.push(letra.toUpperCase());
+          let spanLetrasInformadas =
+          document.getElementById("letrasInformadas");
+          spanLetrasInformadas.innerHTML = letrasInformadas.join();
+          verificarLetra(letra);
+          document.getElementById('letra').value = letra;
+          document.getElementById('resposta').value += letra;
+        }
+
+         // animation
+        let reactionDiv = document.createElement("div");
+        reactionDiv.setAttribute('id', letra+'-animation');
+        reactionDiv.style.margin = '10px';
+        reactionDiv.style.fontSize = '22px';
+        reactionDiv.style.color = '#fff';
+        reactionDiv.style.backgroundColor = getRandomColor();
+        reactionDiv.style.width = '60px';
+        reactionDiv.style.height = '60px';
+        reactionDiv.style.position = 'absolute';
+        reactionDiv.innerText = letra;
+        reactionDiv.style.display = 'flex';
+        reactionDiv.style.justifyContent = 'center';
+        reactionDiv.style.alignItems = 'center';
+        reaction.appendChild(reactionDiv);
+        document.styleSheets[0].insertRule('\
+			  @keyframes anim2 {\
+			  	from { transform: translateY(100); opacity: 1  }\
+			  	to   { transform: translateY(-1400px); opacity: 0; }\
+		   	}'
+       );
+        reactionDiv.style.animation = 'anim2 4s linear forwards';
+      }
       tecladoVirtual.appendChild(newDiv);
       return newDiv;
     })
