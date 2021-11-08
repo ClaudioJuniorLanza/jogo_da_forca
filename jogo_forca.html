@@ -28,6 +28,9 @@
       <button type="button" onclick="comecarJogo()">
         Começar o Jogo
       </button>
+      <button type="button" disabled="true" onclick="salvarJogo()">
+        Salvar o Jogo
+      </button>
     </div>
 
     <div id="jogo" class="fadein">
@@ -349,7 +352,7 @@
     }
 
     function verificaGanhouPerdeuPorLetra() {
-      if (forca.qtdLetras == acertosTotais) {
+      if (forca.qtdLetras == Object.values(formPalavra).length ) {//acertosTotais) {
         parabens();
       }
       if (errosTotais == maxTentativas) {
@@ -477,7 +480,7 @@
 
       // pega a letra através do click
       newDiv.onclick = () => {
-        alert(letra);
+        //alert(letra);
         document.getElementById('letra').value = letra;
         document.getElementById('resposta').value += letra;
       }
