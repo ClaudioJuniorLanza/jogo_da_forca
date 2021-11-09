@@ -285,6 +285,8 @@
     };
 
     function comecarJogo() {
+      document.getElementById('letra').value = '';
+      document.getElementById('resposta').value = '';
       divForca.innerHTML = "<img id='imgForca' src='" + imagem[0] + "' width='50%' />";
       async function start() {
         await forca.getPalavraForca();
@@ -468,7 +470,7 @@
       return color;
     }
 
-    const letrasTeclado = 'abcçdefghijlmnoprstuvxzw';
+    const letrasTeclado = 'abcdefghijlmnoprstuvxzw';
 
     let tecladoVirtual = document.getElementById('tecladoVirtual');
 
@@ -499,8 +501,8 @@
       // pega a letra através do click
       newDiv.onclick = () => {
         //alert(letra);
-        document.getElementById('letra').value = letra;
-        document.getElementById('resposta').value += letra;
+        // document.getElementById('letra').value = letra;
+        // document.getElementById('resposta').value += letra;
 
 
           if (isLetter(letra)) {
