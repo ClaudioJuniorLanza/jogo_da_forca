@@ -24,13 +24,21 @@
   <div class="container" class="fadein">
 
     <div id='header'>
-      <h1>Jogo da Forca - Países</h1>
-      <button type="button" onclick="comecarJogo()">
-        Começar o Jogo
-      </button>
-      <button type="button" disabled="true" onclick="salvarJogo()">
-        Salvar o Jogo
-      </button>
+      <div class="contener_box" style="margin-right: 100px;">
+        <div class="box" style="display: flex; justify-content: center; align-items: center;">
+          <i onclick="comecarJogo()" style="color: rgb(0, 0, 0); font-weight: bolder; background-color: rgb(255, 230, 0); cursor: pointer; font-size: 22px; display: flex; justify-content: center; align-items: center;">
+            <p>Começar</p>
+          </i>
+         </div>
+      </div>
+
+      <div class="contener_box" >
+        <div class="box1" style=" display: flex; justify-content: center; align-items: center; ">
+          <i  onclick="salvarJogo()" style="color: white; background-color: chartreuse; cursor: pointer; font-size: 22px; display: flex; justify-content: center; align-items: center;">
+            <p style="margin-left: 10px;">Salvar Jogo</p>
+          </i>
+         </div>
+      </div>
     </div>
 
     <div id="jogo" class="fadein" style="min-width: 130%; margin-left: -200px; margin-top: 20px;">
@@ -98,10 +106,10 @@
           <p id="textModal"></p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="naoQuerJogar()">
+          <button type="button" data-bs-dismiss="modal" onclick="naoQuerJogar()">
             Não
           </button>
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="querJogar()">
+          <button type="button" data-bs-dismiss="modal" onclick="querJogar()">
             Sim
           </button>
         </div>
@@ -391,10 +399,14 @@
 
     function parabens() {
       let textModal = document.getElementById("textModal");
+      textModal.style.fontSize= '22px';
       let textTitleModal = document.getElementById("textTitleModal");
+
       textModal.innerHTML =
         "Parabéns! Acertou a palavra. Quer jogar novamente?";
       textTitleModal.innerHTML = "ACERTOU! A palavra é " + forca.palavra;
+      textTitleModal.style.fontSize = '26px';
+      textTitleModal.style.color = 'red';
       let myModal = createModal();
       myModal.show();
     }
@@ -402,11 +414,14 @@
     function perdeuJogo() {
       let textModal = document.getElementById("textModal");
       let textTitleModal = document.getElementById("textTitleModal");
+      textModal.style.fontSize= '22px';
       textModal.innerHTML =
         "Chutou e errou....GAMEOVER! A palavra era " +
         forca.palavra +
         ". Quer jogar novamente?";
       textTitleModal.innerHTML = "GAME OVER!";
+      textTitleModal.style.fontSize = '26px';
+      textTitleModal.style.color = 'red';
       let myModal = createModal();
       myModal.show();
     }
