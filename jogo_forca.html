@@ -12,6 +12,12 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
+
+    <script src="./js/Forca.js"></script>
+    <script src="./js/Player.js"></script>
+    <script src="./js/Keyboard.js" defer></script>
+    <!--<script src="./js/Timer.js" defer></script>-->
+
   <title>Jogo da Forca</title>
   <style>
     #jogo {
@@ -28,7 +34,7 @@
       <button type="button" onclick="comecarJogo()">
         Começar o Jogo
       </button>
-      <button type="button" disabled="true" onclick="salvarJogo()">
+      <button type="button" id="salvar" disabled="true" onclick="salvarJogo()">
         Salvar o Jogo
       </button>
     </div>
@@ -74,6 +80,7 @@
           <h3 style="font-weight: bolder;">
             Dica: <span>É um País com</span> <span id="qtdLetras"></span>
           </h3>
+          <div>Tempo: <span id="tempoDecorrido"></span></div>
           <div>Letras Informadas: <span id="letrasInformadas"></span></div>
           <div>Letras Corretas: <span id="letrasCertas"></span></div>
           <div>Letras Erradas: <span id="letrasErradas"></span></div>
@@ -111,81 +118,12 @@
   </div>
 
   <script>
-    class Forca {
-      #palavra;
-      #qtdLetras = 0;
-      constructor(palavra, qtdLetras = 0) {
-        this.#palavra = palavra;
-        this.#qtdLetras = qtdLetras != 0 ? qtdLetras : palavra.length;
-      }
-      set palavra( palavra ) {
-        this.#palavra = palavra;
-        this.#qtdLetras = palavra.length;
-      }
-      get palavra() {
-        return this.#palavra;
-      }
-
-      get qtdLetras() {
-        return this.#qtdLetras;
-      }
-     
-    }
-
-    class Player {
-      #nome = "";
-		  #score = 0;
-		  #palavraAtual = "";
-		  #letrasDigitadas = [];
-		  #tempoCorrido = 0;
-		  constructor(nome, score = 0, palavraAtual = "", letrasDigitadas = [], tempoCorrido = 0){
-        this.#nome = nome;
-        this.#score = score;
-        this.#palavraAtual = palavraAtual;
-        this.#letrasDigitadas = letrasDigitadas;
-        this.#tempoCorrido = tempoCorrido;
-      }
-
-		  set nome( nome ) {
-        this.#nome = nome;
-      }
-      get nome(){
-        return this.#nome;
-      }
-		  set score( score ) {
-        this.#score = score;
-      }
-		  get score(){
-        return this.#score;
-      }
-      set palavraAtual( palavra ) {
-        this.#palavraAtual = palavra;
-      }
-      get paralavraAtual() {
-        return this.#palavraAtual;
-      }
-      set letrasDigitadas( letras ) {
-        this.#letrasDigitadas = letras;
-      }
-      get letrasDigitadas() {
-        return this.#letrasDigitadas;
-      }
-      set tempoCorrido( tempo ) {
-        this.#tempoCorrido = tempo;
-      }
-      get tempoCorrido() {
-        return this.#tempoCorrido;
-      }
-
-    }
-
-    
-
     const maxTentativas = 6;
     const URL_API =
       "https://servicodados.ibge.gov.br/api/v1/localidades/paises";
 
     let forca = new Forca("");
+    let player; 
     //let palavraDaForca;
     let acertosTotais = 0;
     let errosTotais = 0;
@@ -197,6 +135,7 @@
     let letraCerta = [];
     let imagem = [];
     let formPalavra = [];
+    let tempoDecorrido = 0;
     imagem[0] =
       "https://4.bp.blogspot.com/-psq1cvp8ZqA/V1S9Jxrju4I/AAAAAAAAA_4/VGZ7GeSGWaY1UQY0WpENjBUnE621fJVPACLcB/s200/forca0.png";
     imagem[1] =
@@ -235,6 +174,7 @@
       letraErrada = [];
       letraCerta = [];
       formPalavra = [];
+      tempoDecorrido = 0;
       divForca.innerHTML =
         "<img id='imgForca' src='" + imagem[0] + "' width='50%' />";
 
@@ -249,6 +189,9 @@
 
       let spanLetras = document.getElementById("letras");
       spanLetras.innerHTML = formPalavra;
+
+      let spanTempoDecorrido = document.getElementById("tempoDecorrido");
+      spanTempoDecorrido.innerHTML = tempoDecorrido;
     };
 
     function getRespostasAPI(yourUrl) {
@@ -265,16 +208,31 @@
     }
 
     function comecarJogo() {
+      if ( player == undefined ) {
+        player = new Player("");
+      }
+      
+      while( player.nome == "" ) {
+        player.nome = prompt("Nome do jogador: ");
+      }
+    
       divForca.innerHTML =
         "<img id='imgForca' src='" + imagem[0] + "' width='50%' />";
       respostas = JSON.parse(getRespostasAPI(URL_API));
       let random = obterNumeroAleatorio(1, respostas.length);
       palavraRandom = respostas[random].nome.toUpperCase();
-      forca.palavra = tratativaPalavraForca(palavraRandom);
+      forca.palavra = localStorage.nome ? localStorage.palavraAtual : tratativaPalavraForca(palavraRandom);
       console.log(forca);
       exibeQtdLetras(forca.palavra);
       exibeDivJogo();
       formaPalavra();
+      document.getElementById("salvar").disabled = false;
+      document.getElementById("letra").focus();
+      if ( localStorage.nome ) {
+        for ( let l of localStorage.letrasInformadas.split(",") ) {
+          letra(l);
+        }
+      }      
     }
 
     function tratativaPalavraForca(palavraRandom) {
@@ -287,10 +245,11 @@
       spanDica.innerHTML = quantidade.length + " letras";
     }
 
-    function letra() {
-      let letra = document.getElementById("letra").value;
+    function letra( letraDigitada ) {
+      let letra = letraDigitada ? letraDigitada : document.getElementById("letra").value;
       if (isLetter(letra)) {
         letrasInformadas.push(letra.toUpperCase());
+        player.letrasInformadas = letrasInformadas;
         let spanLetrasInformadas =
           document.getElementById("letrasInformadas");
         spanLetrasInformadas.innerHTML = letrasInformadas.join();
@@ -299,6 +258,7 @@
       } else {
         alert("É obrigatório digitar uma letra!");
       }
+      document.getElementById("letra").focus();
     }
 
     function resposta() {
@@ -353,9 +313,11 @@
 
     function verificaGanhouPerdeuPorLetra() {
       if (forca.qtdLetras == Object.values(formPalavra).length ) {//acertosTotais) {
+        removeLocalStorage();
         parabens();
       }
       if (errosTotais == maxTentativas) {
+        removeLocalStorage();
         perdeuJogo();
       }
     }
@@ -363,8 +325,11 @@
     function verificarRespostaDireta(respostaDiretaTratada) {
       document.getElementById("resposta").value = "";
       if (forca.palavra.includes(respostaDiretaTratada.toUpperCase())) {
+        removeLocalStorage();
         parabens();
+        
       } else {
+        removeLocalStorage();
         perdeuJogo();
       }
     }
@@ -377,15 +342,14 @@
       textTitleModal.innerHTML = "ACERTOU! A palavra é " + palavraRandom;
       let myModal = createModal();
       myModal.show();
+      
     }
 
     function perdeuJogo() {
       let textModal = document.getElementById("textModal");
       let textTitleModal = document.getElementById("textTitleModal");
       textModal.innerHTML =
-        "Chutou e errou....GAMEOVER! A palavra era " +
-        palavraRandom +
-        ". Quer jogar novamente?";
+        "Chutou e errou....GAMEOVER! A palavra era " + forca.palavra + ". Quer jogar novamente?";
       textTitleModal.innerHTML = "GAME OVER!";
       let myModal = createModal();
       myModal.show();
@@ -434,65 +398,56 @@
       resetAtributos();
       comecarJogo();
     }
-  </script>
 
-
-  <!-- Teclado Virtual -->
-  <script>
-
-    // randol color
-    const getRandomColor = () => {
-      let letters = '0123456789ABCDEF';
-      let color = '#';
-      for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
+    function salvarJogo() {
+      if ( !(player.letrasInformadas.length == 0) ) {
+        localStorage.setItem("nome", player.nome);
+        localStorage.setItem("palavraAtual", forca.palavra);
+        localStorage.setItem("letrasInformadas", player.letrasInformadas);
+        alert('Jogo salvo! Continue depois');
+      } else {
+        alert("O jogo só pode ser salvo depois que você fornecer pelo menos uma letra!");
       }
-      return color;
     }
 
-    const letrasTeclado = 'abcçdefghijlmnoprstuvxzw';
+    window.onload = function() {
+      if ( localStorage.nome ) {
+        let op = prompt("Existe um Jogo salvo para o jogador " + localStorage.nome + ". Deseja continuar (S/N)? Se optar por não o jogo salvo será perdido.").toLowerCase();
+        while ( !(op == "s" || op == "n") ) {
+          op = prompt("Existe um Jogo salvo para o jogador " + localStorage.nome + ". Deseja continuar? (S/N) ").toLowerCase();
+        }
+        if ( op == "s" ) {
+          if ( player == undefined ) {
+            player = new Player(localStorage.nome);
+          }
+          
+          player.nome = localStorage.nome;
+          player.palavraAtual = localStorage.palavraAtual;
+          player.letrasInformadas = localStorage.letrasInformadas;
+       
+          comecarJogo();
 
-    let tecladoVirtual = document.getElementById('tecladoVirtual');
+        } else {
+          removeLocalStorage();
+        }
 
-    [...letrasTeclado].map(letra => {
-      let newDiv = document.createElement("div");
-      newDiv.setAttribute('id', letra);
-      newDiv.innerText += letra;
-      newDiv.style.margin = '10px';
-      newDiv.style.fontSize = '22px';
-      newDiv.style.color = '#fff';
-      newDiv.style.backgroundColor = getRandomColor();
-      newDiv.style.width = '40px';
-      newDiv.style.height = '40px';
-      newDiv.style.display = 'flex';
-      newDiv.style.justifyContent = 'center';
-      newDiv.style.cursor = 'pointer';
-      newDiv.style.alignItems = 'center';
-
-      // animation
-      document.styleSheets[0].insertRule('\
-			@keyframes anim {\
-				from { transform: rotateZ(0deg);   }\
-				to   { transform: rotateZ(360deg); }\
-			}'
-      );
-      newDiv.style.animation = 'anim 2s linear forwards';
-
-      // pega a letra através do click
-      newDiv.onclick = () => {
-        //alert(letra);
-        document.getElementById('letra').value = letra;
-        document.getElementById('resposta').value += letra;
       }
+      
+    }
 
-      tecladoVirtual.appendChild(newDiv);
-      return newDiv;
-    })
-
-
-
-    console.log()
+    function removeLocalStorage() {
+      localStorage.removeItem("nome");
+      localStorage.removeItem("palavraAtual");
+      localStorage.removeItem("letrasInformadas");
+    }
   </script>
+
+
+  <!-- Teclado Virtual 
+  <script>
+
+    
+  </script>-->
 </body>
 
 </html>
