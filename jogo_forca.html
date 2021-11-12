@@ -28,7 +28,7 @@
 
 <body class="fadein">
   <div class="container" class="fadein">
-
+<!-- 
     <div id='header'>
       <h1>Jogo da Forca - Países</h1>
       <button type="button" onclick="comecarJogo()">
@@ -37,6 +37,23 @@
       <button type="button" id="salvar" disabled="true" onclick="salvarJogo()">
         Salvar o Jogo
       </button>
+    </div> -->
+    <div id='header'>
+      <div class="contener_box" style="margin-right: 100px;">
+        <div class="box" style="display: flex; justify-content: center; align-items: center;">
+          <i onclick="comecarJogo()" style="color: rgb(0, 0, 0); font-weight: bolder; background-color: rgb(255, 230, 0); cursor: pointer; font-size: 22px; display: flex; justify-content: center; align-items: center;">
+            <p>Começar</p>
+          </i>
+         </div>
+      </div>
+
+      <div class="contener_box" >
+        <div class="box1" style=" display: flex; justify-content: center; align-items: center; ">
+          <i  onclick="salvarJogo()" style="color: white; background-color: chartreuse; cursor: pointer; font-size: 22px; display: flex; justify-content: center; align-items: center;">
+            <p style="margin-left: 10px;">Salvar Jogo</p>
+          </i>
+         </div>
+      </div>
     </div>
 
     <div id="jogo" class="fadein" style="min-width: 130%; margin-left: -200px; margin-top: 20px;">
@@ -88,8 +105,6 @@
           <div>Formação da Palavra: <span id="letras"></span></div>
         </div>
       </div>
-
-
     </div>
   </div>
 
@@ -355,7 +370,6 @@
         await verificarRespostaDireta(respostaDiretaTratada);
       }
       tratarPalavraDireta();
-
     }
 
     function verificarLetra(letra) {
