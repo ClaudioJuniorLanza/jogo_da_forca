@@ -210,6 +210,8 @@
     };
 
     function comecarJogo() {
+     
+
       document.getElementById('letra').value = '';
       document.getElementById('resposta').value = '';
       divForca.innerHTML = "<img id='imgForca' src='" + imagem[0] + "' width='50%' />";
@@ -222,13 +224,17 @@
           if ( player == undefined ) {
             player = new Player(this.localStorage.nome);
           }
+          
+          if(localStorage.getItem('errosTotais')){
+            console.log(localStorage.getItem('errosTotais'))
+            const errosTotais = parseInt(localStorage.getItem('errosTotais')); 
+            trocaImagem(errosTotais);
+          }
           player.nome = this.localStorage.nome;
           player.letrasInformadas = this.localStorage.letrasInformadas;
           //player.palavraAtual = this.localStorage.palavraAtual;
           forca.palavra = this.localStorage.palavraAtual;
         }
-        console.log(forca);
-
         await exibeQtdLetras(forca.palavra);
         await exibeDivJogo();
         await formaPalavra();
@@ -308,6 +314,7 @@
     function letrasErradas(letra) {
       letraErrada.push(letra.toUpperCase());
       errosTotais++;
+      localStorage.setItem('errosTotais', errosTotais);
       let spanLetrasErradas = document.getElementById("letrasErradas");
       spanLetrasErradas.innerHTML = letraErrada.join();
       trocaImagem(errosTotais);
