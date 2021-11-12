@@ -424,11 +424,13 @@
     }
 
     function salvarJogo() {
-      if ( !(player.letrasInformadas.length == 0) ) {
+      if (player.letrasInformadas.length > 0) {
         localStorage.setItem("nome", player.nome);
         localStorage.setItem("palavraAtual", forca.palavra);
         localStorage.setItem("letrasInformadas", player.letrasInformadas);
         alert('Jogo salvo! Continue depois');
+        const jogo = document.getElementById('jogo');
+        jogo.style.display = 'none';
       } else {
         alert("O jogo só pode ser salvo depois que você fornecer pelo menos uma letra!");
       }
